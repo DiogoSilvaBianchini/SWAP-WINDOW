@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "8082:3000"
+    volumes:
+      - ./instantclient_23_7:/opt/oracle/instantclient_23_7
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

@@ -9,7 +9,8 @@ const { dataBaseLength } = require("./querys/querry")
 const app = express()
 const server = http.createServer(app)
 const io = new Server(server)
-const PORT = process.env.port || 8086
+
+const PORT = process.env.PORT || 8086
 
 db.authenticate().then(() => {
     console.log("Banco de dados ativo")
@@ -39,5 +40,3 @@ io.on("connection", (socket) => {
 })
 
 server.listen(PORT, () => console.log(`http://localhost:${PORT}`))
-
-//
