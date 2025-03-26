@@ -19,15 +19,25 @@ app.use(morgan("dev"))
 app.use(routes)
 
 let oldLength = 0
+let timer = 0
+
 io.on("connection", (socket) => {
-    console.log("TV conectada")
     setInterval(async () => {
-        const length = await dataBaseLength()        
+        const length = await dataBaseLength()  
+        timer += 1
+        
         if(oldLength < length){
             socket.emit('msg', length)
             oldLength = length
+            timer = 0
+        }else if(timer == 20){
+            socket.emit('msg', length)
+            timer = 0
         }
     }, 1000);
+
 })
 
 server.listen(PORT, () => console.log(`http://localhost:${PORT}`))
+
+//
