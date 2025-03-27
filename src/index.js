@@ -19,24 +19,32 @@ db.authenticate().then(() => {
 app.use(morgan("dev"))
 app.use(routes)
 
-let oldLength = 0
-let timer = 0
-
 io.on("connection", (socket) => {
-    setInterval(async () => {
+    console.log("TV conectada")
+    let oldLength = 0
+    let timer = 0
+    
+    let timerMapTable = setInterval(async () => {
         const length = await dataBaseLength()  
-        timer += 1
+        timer += 0.5
         
         if(oldLength < length){
-            socket.emit('msg', length)
+            io.emit('msg', length)
             oldLength = length
             timer = 0
-        }else if(timer == 20){
-            socket.emit('msg', length)
+        }else if(timer == 30){
+            io.emit('msg', length)
             timer = 0
         }
+        console.log(length)
     }, 1000);
 
+    let intervalId = timerMapTable[Symbol.toPrimitive]()
+    
+    socket.on("disconnect", () => {
+        console.log("TV desconectada")
+        clearInterval(intervalId)
+    })
 })
 
 server.listen(PORT, () => console.log(`http://localhost:${PORT}`))
